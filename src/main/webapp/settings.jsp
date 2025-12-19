@@ -1,238 +1,239 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>Settings - emPower</title>
-    <style>
-        /* --- LAYOUT --- */
-        body { display: flex; height: 100vh; margin: 0; font-family: 'Segoe UI', sans-serif; background: #f4f6f9; overflow: hidden; }
-        .sidebar { width: 260px; background: #343a40; color: white; display: flex; flex-direction: column; }
-        .brand { padding: 20px; font-size: 22px; font-weight: bold; background: #212529; text-align: center; }
-        .nav-links { list-style: none; padding: 0; margin: 0; }
-        .nav-links li a { display: block; padding: 15px 20px; color: #c2c7d0; text-decoration: none; border-left: 4px solid transparent; }
-        .nav-links li a:hover, .nav-links li a.active { background: #495057; color: white; border-left-color: #007bff; }
-        .main { flex: 1; display: flex; flex-direction: column; }
-        .header { background: white; padding: 10px 30px; display: flex; justify-content: space-between; align-items: center; height: 60px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-        .content { padding: 30px; overflow-y: auto; }
+<meta charset="UTF-8">
+<title>Settings - emPower</title>
 
-        /* --- SETTINGS CARDS --- */
-        .card { background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); margin-bottom: 25px; }
-        .card h3 { margin-top: 0; border-bottom: 1px solid #eee; padding-bottom: 10px; color: #333; }
-        
-        label { display: block; margin-top: 15px; margin-bottom: 5px; font-weight: bold; color: #555; }
-        input[type="text"], input[type="email"], input[type="password"], input[type="file"] { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
-        
-        button { border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; font-weight: bold; margin-top: 15px; }
-        .btn-green { background: #28a745; color: white; }
-        .btn-green:hover { background: #218838; }
-        
-        .profile-preview { width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 3px solid #ddd; margin-bottom: 10px; display: block; }
-        
-        .logout-btn { background: #dc3545; color: white; width: 100%; padding: 15px; margin-top: 20px; text-align: center; cursor: pointer; border: none; font-size: 16px; }
-    </style>
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background:#f4f6f9;
+  margin:0;
+  display:flex;
+}
 
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
+/* SIDEBAR */
+.sidebar {
+  width:220px;
+  background:#343a40;
+  color:white;
+  min-height:100vh;
+}
+.sidebar a {
+  display:block;
+  padding:15px;
+  color:#ccc;
+  text-decoration:none;
+}
+.sidebar a.active, .sidebar a:hover {
+  background:#495057;
+  color:#fff;
+}
+
+/* MAIN */
+.main {
+  flex:1;
+}
+.header {
+  background:white;
+  padding:15px 25px;
+  display:flex;
+  justify-content:space-between;
+  border-bottom:1px solid #ddd;
+}
+.content {
+  padding:25px;
+}
+
+.card {
+  background:white;
+  padding:20px;
+  margin-bottom:20px;
+  border-radius:6px;
+  width:420px;
+}
+
+.profile {
+  width:120px;
+  height:120px;
+  border-radius:50%;
+  border:3px solid #ddd;
+  object-fit:cover;
+}
+
+input {
+  padding:8px;
+  width:250px;
+}
+
+button {
+  margin-top:10px;
+  padding:10px 15px;
+  border:none;
+  background:#28a745;
+  color:white;
+  cursor:pointer;
+}
+
+.logout {
+  background:#dc3545;
+  width:100%;
+  margin-top:30px;
+}
+</style>
+
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 </head>
+
 <body>
 
-    <div class="sidebar">
-        <div class="brand">emPower</div>
-        <ul class="nav-links">
-            <li><a href="mark_attendance.jsp">📍 Mark Attendance</a></li>
-            <li><a href="employee_tasks.jsp">📝 Assigned Tasks</a></li>
-            <li><a href="attendance_history.jsp">🕒 Attendance History</a></li>
-            <li><a href="my_expenses.jsp">💸 My Expenses</a></li>
-            <li><a href="salary.jsp">💰 My Salary</a></li>
-            <li><a href="#" class="active">⚙️ Settings</a></li>
-            <li><a href="#" onclick="logout()">🚪 Logout</a></li>
-        </ul>
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <a href="mark_attendance.jsp">📍 Attendance</a>
+  <a href="settings.jsp" class="active">⚙️ Settings</a>
+  <a href="#" onclick="logout()">🚪 Logout</a>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="header">
+    <b>Settings</b>
+    <span id="emailText">Loading...</span>
+  </div>
+
+  <div class="content">
+
+    <!-- CHANGE EMAIL -->
+    <div class="card">
+      <h3>Change Email</h3>
+      <input id="newEmail" placeholder="New email">
+      <br>
+      <button onclick="changeEmail()">Update Email</button>
     </div>
 
-    <div class="main">
-        <div class="header">
-            <strong>Settings</strong>
-            <span id="userEmailDisplay">Loading...</span>
-        </div>
-
-        <div class="content">
-            
-            <div class="card">
-                <h3>📧 Update Email Address</h3>
-                <label>Current Email</label>
-                <input type="text" id="currentEmail" disabled style="background-color: #e9ecef;">
-                
-                <label>New Email Address</label>
-                <input type="email" id="newEmail" placeholder="Enter new email">
-                
-                <button class="btn-green" onclick="updateEmailAddr()">Update Email</button>
-            </div>
-
-            <div class="card">
-                <h3>🔒 Change Password</h3>
-                <label>New Password</label>
-                <input type="password" id="newPassword" placeholder="Enter new password">
-                
-                <button class="btn-green" onclick="updateUserPassword()">Update Password</button>
-            </div>
-
-            <div class="card">
-                <h3>📸 Update Profile Picture</h3>
-                <img id="imgPreview" src="https://via.placeholder.com/100" class="profile-preview" alt="Profile">
-                
-                <label>Select Image</label>
-                <input type="file" id="fileInput" accept="image/*" onchange="previewImage(event)">
-                
-                <button class="btn-green" id="uploadBtn" onclick="uploadProfilePic()">Upload Picture</button>
-                <p id="uploadStatus" style="font-size: 12px; color: #666;"></p>
-            </div>
-
-            <button class="logout-btn" onclick="logout()">🚪 Logout</button>
-
-        </div>
+    <!-- PROFILE IMAGE -->
+    <div class="card">
+      <h3>Profile Picture</h3>
+      <img id="img" class="profile" src="https://via.placeholder.com/120">
+      <br><br>
+      <input type="file" id="file" accept="image/*">
+      <br>
+      <button onclick="uploadPic()">Upload Picture</button>
     </div>
 
-    <script>
-        const firebaseConfig = {
-            apiKey: "AIzaSyCV5tKJMLOVcXiZUyuJZhLWOOSD96gsmP0",
-            authDomain: "attendencewebapp-4215b.firebaseapp.com",
-            projectId: "attendencewebapp-4215b",
-            storageBucket: "attendencewebapp-4215b.firebasestorage.app", // Ensure this bucket exists in console
-            messagingSenderId: "97124588288",
-            appId: "1:97124588288:web:08507eaacdc6155ad1b1e5"
-        };
-        
-        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
-        const db = firebase.firestore();
-        const storage = firebase.storage(); // Initialize Storage
+    <button class="logout" onclick="logout()">Logout</button>
 
-        // CHECK LOGIN STATE
-        auth.onAuthStateChanged(user => {
-            if (user) {
-                document.getElementById("userEmailDisplay").innerText = user.email;
-                document.getElementById("currentEmail").value = user.email;
-                
-                // Load existing photo if available
-                if(user.photoURL) {
-                    document.getElementById("imgPreview").src = user.photoURL;
-                }
-            } else {
-                window.location.href = "login.jsp";
-            }
-        });
+  </div>
+</div>
 
-        // --- 1. UPDATE EMAIL FUNCTION ---
-        function updateEmailAddr() {
-            const user = auth.currentUser;
-            const newEmail = document.getElementById("newEmail").value;
+<script>
+/* 🔥 FIREBASE INIT */
+const firebaseConfig = {
+  apiKey: "AIzaSyCV5tKJMLOVcXiZUyuJZhLWOOSD96gsmP0",
+  authDomain: "attendencewebapp-4215b.firebaseapp.com",
+  projectId: "attendencewebapp-4215b"
+};
 
-            if(!newEmail) return alert("Please enter a new email.");
+if (!firebase.apps.length) {
+  firebase.initializeApp(firebaseConfig);
+}
 
-            user.updateEmail(newEmail).then(() => {
-                // Also update in Firestore 'users' collection so DB stays synced
-                db.collection("users").doc(user.email).delete(); // Optional: remove old doc or keep history
-                
-                // Create new doc reference? Or just rely on Auth. 
-                // Usually better to ask user to re-login.
-                alert("Email updated! Please login again with your new email.");
-                logout();
-            }).catch((error) => {
-                console.error(error);
-                if(error.code === 'auth/requires-recent-login') {
-                    alert("Security Alert: Please Logout and Login again to change your email.");
-                } else {
-                    alert("Error: " + error.message);
-                }
-            });
-        }
+const auth = firebase.auth();
+const db = firebase.firestore();
 
-        // --- 2. UPDATE PASSWORD FUNCTION ---
-        function updateUserPassword() {
-            const user = auth.currentUser;
-            const newPass = document.getElementById("newPassword").value;
+/* 🔐 AUTH CHECK */
+auth.onAuthStateChanged(user => {
+  if (!user) {
+    window.location.href = "login.jsp";
+    return;
+  }
 
-            if(!newPass || newPass.length < 6) return alert("Password must be at least 6 characters.");
+  emailText.innerText = user.email;
 
-            user.updatePassword(newPass).then(() => {
-                alert("Password updated successfully!");
-                document.getElementById("newPassword").value = "";
-            }).catch((error) => {
-                if(error.code === 'auth/requires-recent-login') {
-                    alert("Security Alert: Please Logout and Login again to change your password.");
-                } else {
-                    alert("Error: " + error.message);
-                }
-            });
-        }
+  db.collection("users").doc(user.uid).get().then(doc => {
+    if (doc.exists && doc.data().profileImage) {
+      img.src = doc.data().profileImage;
+    }
+  });
+});
 
-        // --- 3. UPLOAD PICTURE FUNCTION (Uses Firebase Storage) ---
-        function previewImage(event) {
-            const reader = new FileReader();
-            reader.onload = function(){
-                const output = document.getElementById('imgPreview');
-                output.src = reader.result;
-            };
-            reader.readAsDataURL(event.target.files[0]);
-        }
+/* ✉️ CHANGE EMAIL */
+function changeEmail() {
+  const user = auth.currentUser;
+  const newEmail = document.getElementById("newEmail").value;
 
-        function uploadProfilePic() {
-            const user = auth.currentUser;
-            const file = document.getElementById("fileInput").files[0];
-            const statusTxt = document.getElementById("uploadStatus");
+  if (!newEmail) {
+    alert("Enter new email");
+    return;
+  }
 
-            if (!file) return alert("Please select a file first.");
+  user.updateEmail(newEmail)
+    .then(() => {
+      return db.collection("users").doc(user.uid).update({
+        email: newEmail
+      });
+    })
+    .then(() => {
+      alert("Email updated. Please login again.");
+      logout();
+    })
+    .catch(err => alert(err.message));
+}
 
-            statusTxt.innerText = "Uploading... please wait.";
-            document.getElementById("uploadBtn").disabled = true;
+/* 🖼️ UPLOAD & RESIZE IMAGE (SAFE FOR FIRESTORE) */
+function uploadPic() {
+  const user = auth.currentUser;
+  const file = document.getElementById("file").files[0];
 
-            // Create storage reference: users/USER_ID/profile.jpg
-            const storageRef = storage.ref(`users/${user.uid}/profile_${Date.now()}`);
+  if (!file) {
+    alert("Select an image");
+    return;
+  }
 
-            const uploadTask = storageRef.put(file);
+  const imgObj = new Image();
+  const reader = new FileReader();
 
-            uploadTask.on('state_changed', 
-                (snapshot) => {
-                    // Progress indicator (optional)
-                    var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                    statusTxt.innerText = "Upload is " + Math.floor(progress) + "% done";
-                }, 
-                (error) => {
-                    // Handle unsuccessful uploads
-                    console.error(error);
-                    alert("Upload failed. Ensure Firebase Storage is enabled in Console.");
-                    document.getElementById("uploadBtn").disabled = false;
-                    statusTxt.innerText = "";
-                }, 
-                () => {
-                    // Handle successful uploads on complete
-                    uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
-                        console.log('File available at', downloadURL);
-                        
-                        // 1. Update Auth Profile
-                        user.updateProfile({ photoURL: downloadURL });
-                        
-                        // 2. Update Firestore (Optional but recommended)
-                        // Note: If you don't have a 'users' collection set up yet, this might fail unless created
-                        db.collection("users").doc(user.uid).set({
-                            photoURL: downloadURL,
-                            email: user.email
-                        }, { merge: true });
+  reader.onload = e => imgObj.src = e.target.result;
 
-                        statusTxt.innerText = "Upload Complete!";
-                        alert("Profile Picture Updated!");
-                        document.getElementById("uploadBtn").disabled = false;
-                    });
-                }
-            );
-        }
+  imgObj.onload = () => {
+    const canvas = document.createElement("canvas");
+    const SIZE = 300;
 
-        function logout() {
-            auth.signOut().then(() => window.location.href = "login.jsp");
-        }
-    </script>
+    canvas.width = SIZE;
+    canvas.height = SIZE;
+
+    const ctx = canvas.getContext("2d");
+    ctx.drawImage(imgObj, 0, 0, SIZE, SIZE);
+
+    const compressedBase64 = canvas.toDataURL("image/jpeg", 0.7);
+
+    console.log("Base64 size:", compressedBase64.length);
+
+    db.collection("users").doc(user.uid).set({
+      profileImage: compressedBase64
+    }, { merge: true })
+    .then(() => {
+      document.getElementById("img").src = compressedBase64;
+      alert("Profile picture updated!");
+    })
+    .catch(err => alert(err.message));
+  };
+
+  reader.readAsDataURL(file);
+}
+
+/* 🚪 LOGOUT */
+function logout() {
+  auth.signOut().then(() => {
+    window.location.href = "login.jsp";
+  });
+}
+</script>
+
 </body>
 </html>
+
+
